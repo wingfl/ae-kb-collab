@@ -8,11 +8,11 @@
 - `lark-cli`（未装时说明里给了安装与登录步骤）
 - 执行者本人有飞书云空间写权限；建知识库空间需要管理员在后台开开关
 
-## 三步
+## 一步
 
-1. 把 [prompt.md](prompt.md) 里的口令复制给 Agent，替换四个 `<占位符>`
-2. Agent 读 [onboard.md](onboard.md)，按 §0 检查环境、§1–§5 部署
-3. 新开一个任务，确认 [SKILL.md](SKILL.md) 已被加载，再投第一篇材料
+把 [prompt.md](prompt.md) 里那段话复制给 Agent，不用改。它读 [onboard.md](onboard.md)，按 §0 检查环境、§1–§5 部署，最后用 §0.3 的命令把 [SKILL.md](SKILL.md) 装进 skills 目录。
+
+唯一需要人动手的是登录授权：Agent 会把链接发过来，点一次即可。
 
 ## 文件
 

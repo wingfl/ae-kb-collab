@@ -32,6 +32,46 @@
 
 只有「管理员侧且拿不到」这一种情况才真正停住，停下来时要说清：哪一步、缺什么、该找谁、开完后怎么回来说一声。
 
+### 0.2 默认值：不要向使用者索取参数
+
+使用者只发一句话，不填表。下面这些一律自动取或用默认名：
+
+| 参数 | 取值规则 |
+| --- | --- |
+| 租户 / 团队 | 取当前登录身份所属租户，不问人 |
+| 知识库空间名 | 默认「需求知识库」；已存在同名空间就直接复用，不新建 |
+| 协同台名 | 默认「协同台」；已存在同名 Base 就复用 |
+| 主文档 | 系统配置里没有值时，建一篇空 docx 当骨架，挂进知识库空间；使用者之后再填内容 |
+| 提交人 / 默认审核人 | 都填当前登录用户，后续由使用者改 |
+| 修订人 | 当前登录用户的姓名 |
+| 通知方式 | 默认发到 `chat_id` 为空的群不可行，所以默认单选通知给本人；使用者后续可在系统配置里改 |
+
+只在一种情况下允许反问：主文档已存在但当前身份读不到（会返回权限错误），这时按 §0.1 发文档链接让人申请，不要新建第二篇。
+
+### 0.3 一条命令装 Skill
+
+Windows：
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.trae-cn\skills\ae-kb-collab" | Out-Null; Invoke-WebRequest -Uri https://raw.githubusercontent.com/wingfl/ae-kb-collab/main/SKILL.md -OutFile "$env:USERPROFILE\.trae-cn\skills\ae-kb-collab\SKILL.md"
+```
+
+macOS / Linux：
+
+```bash
+mkdir -p ~/.trae-cn/skills/ae-kb-collab && curl -fsSL https://raw.githubusercontent.com/wingfl/ae-kb-collab/main/SKILL.md -o ~/.trae-cn/skills/ae-kb-collab/SKILL.md
+```
+
+装完让使用者新开一个任务，否则当前会话不会重新加载 Skill。
+
+### 0.4 CLI 从哪来
+
+`lark-cli` 在 Trae 里由 lark 插件自带（`...\plugins\trae-remote-official\lark\<版本>\bin\lark-cli.exe`）。换到没有插件的环境时：
+
+1. 先跑 `lark-cli --version`，能出版本号就直接用；
+2. 跑不通，说明这台机器没有 CLI，告知使用者需要先装 lark 插件或对应的 CLI 发行包，不要自己从 npm 拉一个来路不明的包顶替。
+
+
 ---
 
 ## 1. 建知识库空间
@@ -132,7 +172,7 @@ Base 名用口令里的「协同台名」。表名、字段名、字段类型、
 
 ## 5. 装 Skill
 
-把同目录的 `SKILL.md` 放到 Agent 的 skills 目录（Trae 为 `~/.trae-cn/skills/ae-kb-collab/`），然后让使用者新开一个任务验证 Skill 是否被加载。
+把 `SKILL.md` 装进 Agent 的 skills 目录，命令见 §0.3；装完让使用者新开一个任务，否则当前会话不会重新加载。
 
 验收：新任务里问「材料整合怎么走」，Agent 能说出四态流转与整合规则，而不是现场编。
 
