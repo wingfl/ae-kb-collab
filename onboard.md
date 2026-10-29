@@ -71,6 +71,45 @@ mkdir -p ~/.trae-cn/skills/ae-kb-collab && curl -fsSL https://raw.githubusercont
 1. 先跑 `lark-cli --version`，能出版本号就直接用；
 2. 跑不通，说明这台机器没有 CLI，告知使用者需要先装 lark 插件或对应的 CLI 发行包，不要自己从 npm 拉一个来路不明的包顶替。
 
+### 0.5 授权链接与二维码的正确生成方式
+
+这一段必须按原文执行，不要自创流程。验证链接里带 `&user_code=`，任何一处截断都会让人打不开、扫不出。
+
+第一步，拿新链接（**不要复用旧链接**，600 秒后作废）：
+
+```
+lark-cli auth login --no-wait --json --domain base,wiki,docs,drive,im,contact
+```
+
+返回 JSON 里有三个字段：`verification_url`、`device_code`、`expires_in`（秒，通常 600）。
+
+第二步，把 `verification_url` **原样**发给使用者：不 URL 编解码、不加空格、不换行、不塞进 markdown 链接文字里。链接必须完整包含 `?flow_id=...&user_code=...` 两段。
+
+第三步，用同一个字符串生成二维码。**URL 一律加引号**，PowerShell 里不加引号会把 `&user_code=...` 截断，生成出来的是半个链接，扫码必然失败：
+
+```
+lark-cli auth qrcode "<verification_url>" -o qr.png
+```
+
+展示顺序：先给链接，再给二维码图片。
+
+第四步，使用者确认授权完成后，由 Agent 自己执行（不要等他复制回来）：
+
+```
+lark-cli auth login --device-code <device_code>
+```
+
+### 0.6 授权失败怎么查
+
+| 症状 | 最可能的原因 | 处理 |
+| --- | --- | --- |
+| 链接打开报无效或已过期 | 超过 `expires_in` 秒数，或链接被截断到 `flow_id` 就没了后半段 | 重跑第一步生成新链接，旧的丢弃 |
+| 扫码后无反应或提示无效 | 二维码由截断的 URL 生成（`&` 未加引号） | 用带引号的完整 URL 重新生成 |
+| 打开后停在登录页 | 浏览器里登录的账号不在目标租户 | 换成该租户账号登录后再打开 |
+| 网页显示授权成功，CLI 仍报未登录 | 只发了链接，没有回来执行 `--device-code` | 补执行第四步 |
+| 链接在手机上打得开、电脑上打不开 | 同一条链接只对当次流程有效，被重复使用 | 一次授权只配一条链接 |
+
+
 
 ---
 
