@@ -3,7 +3,7 @@
 把下面整段复制给能操作终端和飞书的 AI Agent（Codex、Claude Code、Trae、WorkBuddy 都行），只改尖括号里的四个值。
 
 ```
-请按 https://<onboard.md 的公开地址> 的说明，帮我部署「Aether 需求知识库协同台」。
+请按 https://raw.githubusercontent.com/wingfl/ae-kb-collab/main/onboard.md 的说明，帮我部署「Aether 需求知识库协同台」。
 参数：团队/租户 <团队名>，知识库空间名 <知识库名>，协同台名 <协同台名>，主文档 <已有需求文档链接，可留空>。
 
 要求：
