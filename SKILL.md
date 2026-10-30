@@ -7,6 +7,26 @@ description: 把材料整合进已登记的完整文档并走审核、记台账�
 
 一套固定流程：材料 → 完整文档 → 挂标注 → 发审阅卡 → 审核归一 → 记台账。
 
+## 0. 前置：先确认用的是谁的应用
+
+`lark-cli` 默认共用插件内置应用，只在该租户内可用。跨租户或换账号时会报「当前账号无法使用 XX 的飞书 CLI」，这时不是权限申请问题，是应用归属问题。
+
+使用者要自建应用时，按这四步走：
+
+1. `open.feishu.cn` 开发者后台新建自建应用
+2. 权限管理里勾选六组：知识库（`wiki`）、云文档（`docs`）、多维表格（`base`）、云空间（`drive`）、消息与群组（`im`）、通讯录（`contact`），外加 `auth:user.id:read` 和 `offline_access`
+3. 创建版本 → 申请发布 → 管理员审核通过（没走这步授权页会报应用不可用）
+4. 本机绑定并重新登录：
+
+```bash
+lark-cli config init --app-id <appId> --brand feishu   # 按提示粘贴 app secret
+lark-cli auth login
+lark-cli config show                                    # 确认绑定生效
+```
+
+换应用会作废已有授权，第 4 步必须重新登录。开工前用 `lark-cli auth status` 看一眼 `userName`，确认是使用者本人。
+
+
 ## 1. 先读配置，不要问人
 
 从协同台 Base 的「系统配置」表读下面几项，读不到才去问使用者：
