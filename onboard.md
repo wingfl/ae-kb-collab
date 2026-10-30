@@ -64,6 +64,8 @@ mkdir -p ~/.trae-cn/skills/ae-kb-collab && curl -fsSL https://raw.githubusercont
 
 装完让使用者新开一个任务，否则当前会话不会重新加载 Skill。
 
+下载失败只试一次，不要换镜像、不要重试多次：立刻停，让使用者开 VPN，开完再下一次。
+
 ### 0.4 CLI 从哪来
 
 `lark-cli` 在 Trae 里由 lark 插件自带（`...\plugins\trae-remote-official\lark\<版本>\bin\lark-cli.exe`）。换到没有插件的环境时：
